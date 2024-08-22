@@ -35,7 +35,7 @@ Issues = "https://github.com/miccoli/hdf5-xxh/issues"
 Source = "https://github.com/miccoli/hdf5-xxh.git"
 
 [project.scripts]
-h5xxh = "h5xxh.cli:h5xxh"
+h5xxhsum = "h5xxh.cli:h5xxhsum"
 
 #
 # hatch

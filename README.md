@@ -18,7 +18,7 @@ pip install git+https://github.com/miccoli/hdf5-xxh.git
 ## Usage
 
 ```bash
-$ h5xxh foo.h5
+$ h5xxhsum foo.h5
 e92417e2e9a3425cffbe35fddc5f21a3  foo.h5
 ```
 

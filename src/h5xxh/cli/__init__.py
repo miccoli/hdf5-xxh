@@ -16,8 +16,8 @@ digestre = re.compile(r"([0-9a-f]{32})\s+(.+)\n")
 @click.command()
 @click.argument("h5", nargs=-1)
 @click.option("--check", "-c", multiple=False, type=click.File("r"))
-@click.version_option(version=__version__, prog_name="h5xxh")
-def h5xxh(h5, check):  # noqa: C901, PLR0912
+@click.version_option(version=__version__, prog_name="h5xxhsum")
+def h5xxhsum(h5, check):  # noqa: C901, PLR0912
     if h5 and check:
         click.secho(
             "Cannot both verify and compute checksums",
