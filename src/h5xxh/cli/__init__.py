@@ -1,6 +1,7 @@
 # SPDX-FileCopyrightText: 2024-present S. Miccoli <stefano.miccoli@polimi.it>
 #
 # SPDX-License-Identifier: MIT
+import re
 import sys
 
 import click
@@ -9,23 +10,50 @@ import h5py
 from h5xxh import Walker
 from h5xxh.__about__ import __version__
 
+digestre = re.compile(r"([0-9A-Fa-f]{32})\s+(.+)\n")
 
-@click.group(
-    context_settings={"help_option_names": ["-h", "--help"]},
-    invoke_without_command=True,
-)
-@click.version_option(version=__version__, prog_name="h5xxh")
+
+@click.command()
 @click.argument("h5", nargs=-1)
-def h5xxh(h5):
-    for pth in h5:
-        try:
-            msg = data_hash(pth)
-        except FileNotFoundError:
-            click.secho(f"{pth}: not found", file=sys.stderr, fg="red")
-        except OSError as err:
-            click.secho(f"{pth}: {err}", file=sys.stderr, fg="red")
-        else:
-            click.echo(f"{msg}  {pth}")
+@click.option("--check", "-c", multiple=False, type=click.File("r"))
+@click.version_option(version=__version__, prog_name="h5xxh")
+def h5xxh(h5, check):
+    if h5 and check:
+        click.secho(
+            "Cannot both verify and compute checksums",
+            file=sys.stderr,
+            fg="red",
+        )
+        sys.exit(2)
+    if check:
+        mismatched = 0
+        for i, line in enumerate(check, start=1):
+            mo = digestre.fullmatch(line)
+            if not mo:
+                click.secho(
+                    f"{check.name}: invalid line {i:d}, stop",
+                    file=sys.stderr,
+                    fg="red",
+                )
+                sys.exit(1)
+            msg = data_hash(mo.group(2))
+            if msg == mo.group(1):
+                click.echo(f"{mo.group(2)}: OK")
+            else:
+                click.secho(f"{mo.group(2)}: FAIL", bold=True)
+                mismatched += 1
+        sys.exit(0 if mismatched == 0 else 1)
+    else:
+        for pth in h5:
+            try:
+                msg = data_hash(pth)
+            except FileNotFoundError:
+                click.secho(f"{pth}: not found", file=sys.stderr, fg="red")
+            except OSError as err:
+                click.secho(f"{pth}: {err}", file=sys.stderr, fg="red")
+            else:
+                click.echo(f"{msg}  {pth}")
+        sys.exit(0)
 
 
 def data_hash(pth):
