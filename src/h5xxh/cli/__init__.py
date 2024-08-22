@@ -10,14 +10,14 @@ import h5py
 from h5xxh import Walker
 from h5xxh.__about__ import __version__
 
-digestre = re.compile(r"([0-9A-Fa-f]{32})\s+(.+)\n")
+digestre = re.compile(r"([0-9a-f]{32})\s+(.+)\n")
 
 
 @click.command()
 @click.argument("h5", nargs=-1)
 @click.option("--check", "-c", multiple=False, type=click.File("r"))
 @click.version_option(version=__version__, prog_name="h5xxh")
-def h5xxh(h5, check):
+def h5xxh(h5, check):  # noqa: C901, PLR0912
     if h5 and check:
         click.secho(
             "Cannot both verify and compute checksums",
@@ -26,7 +26,7 @@ def h5xxh(h5, check):
         )
         sys.exit(2)
     if check:
-        mismatched = 0
+        verified = 0
         for i, line in enumerate(check, start=1):
             mo = digestre.fullmatch(line)
             if not mo:
@@ -36,13 +36,21 @@ def h5xxh(h5, check):
                     fg="red",
                 )
                 sys.exit(1)
-            msg = data_hash(mo.group(2))
-            if msg == mo.group(1):
-                click.echo(f"{mo.group(2)}: OK")
+            ref, pth = mo.groups()
+            try:
+                msg = data_hash(pth)
+            except FileNotFoundError:
+                click.secho(f"{pth}: Missing", bold=True)
+                continue
+            except OSError as err:
+                click.secho(f"{pth}: Error: {err}", bold=True)
+                continue
+            if msg == ref:
+                click.echo(f"{pth}: OK")
+                verified += 1
             else:
-                click.secho(f"{mo.group(2)}: FAIL", bold=True)
-                mismatched += 1
-        sys.exit(0 if mismatched == 0 else 1)
+                click.secho(f"{pth}: FAIL", bold=True)
+        sys.exit(0 if verified == i else 1)
     else:
         for pth in h5:
             try:
