@@ -16,8 +16,8 @@ class Walker:
 
     def __call__(self, name, obj):
         # runtime check of lexicographical iteration order
-        assert name > (
-            self._names[-1] if self._names else ""
+        assert name.split("/") > (
+            self._names[-1].split("/") if self._names else []
         ), f"Visiting in unexpected order: {name}, {self._names}"
         if not isinstance(obj, h5py.Dataset):
             return

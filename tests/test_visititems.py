@@ -1,7 +1,11 @@
+import operator
+
 import h5py
 import pytest
 
 import h5xxh
+
+splitter = operator.methodcaller("split", "/")
 
 
 def _add_dset(grp, name):
@@ -26,9 +30,10 @@ def h5file(tmp_path):
         names += [_add_dset(grp, "a")]
 
         names += [_add_dset(h5, "a")]
+        names += [_add_dset(h5, "z-")]
 
         # check that insertion tracking is honored
-        assert list(h5) == ["b", "B", "z", "a"]
+        assert list(h5) == ["b", "B", "z", "a", "z-"]
         assert list(h5["B"]) == ["b", "a"]
         assert list(h5["z"]) == ["b", "a"]
 
@@ -45,4 +50,4 @@ def test_lexicographic(h5file):
     w = h5xxh.Walker()
     with h5py.File(pth, "r") as h5:
         h5.visititems(w)
-    assert w.names == sorted(names)
+    assert w.names == sorted(names, key=splitter)
