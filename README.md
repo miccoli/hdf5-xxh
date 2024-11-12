@@ -22,6 +22,17 @@ $ h5xxhsum foo.h5
 e92417e2e9a3425cffbe35fddc5f21a3  foo.h5
 ```
 
+### Chunked storage
+
+HDF5 supports [chunked storage](https://docs.h5py.org/en/stable/high/dataset.html#chunked-storage).
+This utility implements a flag for controlling how the hash digest is computed:
+
+- `--no-chunked`: the whole dataset is loaded in memory and hashed
+- `--chunked`: the hash is computed incrementally, loading a chunk at a time, with the [`iter_chunks()`](https://docs.h5py.org/en/stable/high/dataset.html#h5py.Dataset.iter_chunks) method.
+
+`--chunked` is faster, but the hash digest depends not only on the data itself but also on the chunk size/layout.
+On the contrary `--no-chunked` is slower but idependent on the storage layout.
+
 ## Caveat emptor
 
 I wrote this small utility for personal use, so there is no guarantee that the API will remain stable.

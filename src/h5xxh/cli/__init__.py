@@ -16,8 +16,9 @@ digestre = re.compile(r"([0-9a-f]{32})\s+(.+)\n")
 @click.command()
 @click.argument("h5", nargs=-1)
 @click.option("--check", "-c", multiple=False, type=click.File("r"))
+@click.option("--chunked/--no-chunked", default=False)
 @click.version_option(version=__version__, prog_name="h5xxhsum")
-def h5xxhsum(h5, check):  # noqa: C901, PLR0912
+def h5xxhsum(h5, check, chunked):  # noqa: C901, PLR0912
     if h5 and check:
         click.secho(
             "Cannot both verify and compute checksums",
@@ -38,7 +39,7 @@ def h5xxhsum(h5, check):  # noqa: C901, PLR0912
                 sys.exit(1)
             ref, pth = mo.groups()
             try:
-                msg = data_hash(pth)
+                msg = data_hash(pth, chunked)
             except FileNotFoundError:
                 click.secho(f"{pth}: Missing", bold=True)
                 continue
@@ -54,7 +55,7 @@ def h5xxhsum(h5, check):  # noqa: C901, PLR0912
     else:
         for pth in h5:
             try:
-                msg = data_hash(pth)
+                msg = data_hash(pth, chunked)
             except FileNotFoundError:
                 click.secho(f"{pth}: not found", file=sys.stderr, fg="red")
             except OSError as err:
@@ -64,8 +65,8 @@ def h5xxhsum(h5, check):  # noqa: C901, PLR0912
         sys.exit(0)
 
 
-def data_hash(pth):
-    callback = Walker()
+def data_hash(pth, chunked):
+    callback = Walker(chunked=chunked)
     with h5py.File(pth, "r") as h5:
         h5.visititems(callback)
     return callback.hexdigest

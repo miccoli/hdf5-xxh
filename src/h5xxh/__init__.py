@@ -10,11 +10,19 @@ logger = logging.getLogger(__name__)
 
 
 class Walker:
-    def __init__(self, /, hashfun=xxhash.xxh3_128):
+    def __init__(self, *, hashfun=xxhash.xxh3_128, chunked=False):
+        self.chunked = chunked
         self._names = []
         self._digest = hashfun()
 
-    def __call__(self, name, obj):
+    def _iter_data(self, dset, /):
+        if not self.chunked or dset.chunks is None:
+            yield dset[()]
+        else:
+            for sl in dset.iter_chunks():
+                yield dset[sl]
+
+    def __call__(self, name, obj, /):
         # runtime check of lexicographical iteration order
         assert name.split("/") > (
             self._names[-1].split("/") if self._names else []
@@ -36,7 +44,8 @@ class Walker:
 
         logger.debug("hashing '%s' (%s)", obj.name, obj.dtype.str)
         self._names.append(name)
-        self._digest.update(obj[()])
+        for data in self._iter_data(obj):
+            self._digest.update(data)
 
     @property
     def hexdigest(self):
