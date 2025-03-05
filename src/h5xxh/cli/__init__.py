@@ -27,7 +27,7 @@ def h5xxhsum(h5, check, chunked):  # noqa: C901, PLR0912
         )
         sys.exit(2)
     if check:
-        verified = 0
+        verified = to_be_verified = 0
         for i, line in enumerate(check, start=1):
             mo = digestre.fullmatch(line)
             if not mo:
@@ -38,6 +38,7 @@ def h5xxhsum(h5, check, chunked):  # noqa: C901, PLR0912
                 )
                 sys.exit(1)
             ref, pth = mo.groups()
+            to_be_verified += 1
             try:
                 msg = data_hash(pth, chunked)
             except FileNotFoundError:
@@ -51,7 +52,7 @@ def h5xxhsum(h5, check, chunked):  # noqa: C901, PLR0912
                 verified += 1
             else:
                 click.secho(f"{pth}: FAIL", bold=True)
-        sys.exit(0 if verified == i else 1)
+        sys.exit(0 if verified == to_be_verified else 1)
     else:
         for pth in h5:
             try:
