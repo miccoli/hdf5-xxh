@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
@@ -41,7 +41,10 @@ h5xxhsum = "h5xxh.cli:h5xxhsum"
 # hatch
 #
 [tool.hatch.version]
-path = "src/h5xxh/__about__.py"
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/h5xxh/_version.py"
 
 [tool.hatch.envs.types]
 extra-dependencies = [
@@ -57,9 +60,6 @@ check = "mypy --install-types --non-interactive {args:src/h5xxh tests}"
 source_pkgs = ["h5xxh", "tests"]
 branch = true
 parallel = true
-omit = [
-  "src/h5xxh/__about__.py",
-]
 
 [tool.coverage.paths]
 h5xxh = ["src/h5xxh", "*/h5xxh/src/h5xxh"]

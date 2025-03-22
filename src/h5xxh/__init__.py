@@ -6,6 +6,10 @@ import logging
 import h5py
 import xxhash
 
+from h5xxh._version import __version__
+
+__all__ = ["Walker", "__version__"]
+
 logger = logging.getLogger(__name__)
 
 
