@@ -1,18 +1,18 @@
 # hdf5-xxh
-Compute a xxHash of the Datasets in an HDF5 file.
+Compute a [xxHash](https://xxhash.com) of the Datasets in an [HDF5®](https://www.hdfgroup.org/solutions/hdf5/) file.
 
 ## Motivation
 
 For regression testing, it is sometimes useful to check for the strict equality of numerical data stored in an HDF5 file.
 A reference copy of the HDF5 file could be saved, but this is not always desirable, especially if the file is very large.
-Computing a hash digest of the HDF5 file is not possible because, for various reasons, HDF5 files are not byte-for-byte identical, even if the stored data is the same.
+Computing a hash digest of the HDF5 file itself is not possible because, for various reasons, HDF5 files are not byte-for-byte identical, even if the stored data is the same.
 This small utility computes a hash digest of the datasets stored in the HDF5 files, thereby enabling an easy check for strict equality without the need to store a complete copy of the data itself.
 
 ## Installation
 
-For now only source installation is possible:
+The package is available on pypi:
 ```bash
-pip install git+https://github.com/miccoli/hdf5-xxh.git
+pip install h5xxhsum
 ```
 
 ## Usage
