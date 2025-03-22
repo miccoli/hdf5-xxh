@@ -14,7 +14,7 @@ def _add_dset(grp, name):
     return dset.name[1:]
 
 
-@pytest.fixture()
+@pytest.fixture
 def h5file(tmp_path):
     fname = tmp_path / "a.hdf5"
     names = []
