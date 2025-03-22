@@ -7,7 +7,7 @@ import sys
 import click
 import h5py
 
-from h5xxh import Walker, __version__
+from h5xxhsum import Walker, __version__
 
 digestre = re.compile(r"([0-9a-f]{32})\s+(.+)\n")
 

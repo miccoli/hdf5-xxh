@@ -162,4 +162,4 @@ cython_debug/
 #.idea/
 
 # hatch-vcs hook
-/src/h5xxh/_version.py
+/src/h5xxhsum/_version.py

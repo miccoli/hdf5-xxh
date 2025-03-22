@@ -3,7 +3,7 @@ import operator
 import h5py
 import pytest
 
-import h5xxh
+import h5xxhsum
 
 splitter = operator.methodcaller("split", "/")
 
@@ -47,7 +47,7 @@ def test_lexicographic(h5file):
     """check that File.visititems iterates in lexicographic order"""
     pth, names = h5file
 
-    w = h5xxh.Walker()
+    w = h5xxhsum.Walker()
     with h5py.File(pth, "r") as h5:
         h5.visititems(w)
     assert w.names == sorted(names, key=splitter)

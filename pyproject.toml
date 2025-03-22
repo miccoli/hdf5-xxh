@@ -3,7 +3,7 @@ requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
 
 [project]
-name = "h5xxh"
+name = "h5xxhsum"
 dynamic = ["version"]
 description = 'Compute xxHash digest of hdf5 datasets'
 readme = "README.md"
@@ -35,7 +35,7 @@ Issues = "https://github.com/miccoli/hdf5-xxh/issues"
 Source = "https://github.com/miccoli/hdf5-xxh.git"
 
 [project.scripts]
-h5xxhsum = "h5xxh.cli:h5xxhsum"
+h5xxhsum = "h5xxhsum.cli:h5xxhsum"
 
 #
 # hatch
@@ -44,26 +44,26 @@ h5xxhsum = "h5xxh.cli:h5xxhsum"
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "src/h5xxh/_version.py"
+version-file = "src/h5xxhsum/_version.py"
 
 [tool.hatch.envs.types]
 extra-dependencies = [
   "mypy>=1.0.0",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/h5xxh tests}"
+check = "mypy --install-types --non-interactive {args:src/h5xxhsum tests}"
 
 #
 # coverage
 #
 [tool.coverage.run]
-source_pkgs = ["h5xxh", "tests"]
+source_pkgs = ["h5xxhsum", "tests"]
 branch = true
 parallel = true
 
 [tool.coverage.paths]
-h5xxh = ["src/h5xxh", "*/h5xxh/src/h5xxh"]
-tests = ["tests", "*/h5xxh/tests"]
+h5xxhsum = ["src/h5xxhsum", "*/h5xxhsum/src/h5xxhsum"]
+tests = ["tests", "*/h5xxhsum/tests"]
 
 [tool.coverage.report]
 exclude_lines = [
