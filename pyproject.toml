@@ -1,5 +1,5 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
+requires = ["hatchling ~= 1.27", "hatch-vcs ~= 0.4.0"]
 build-backend = "hatchling.build"
 
 [project]
@@ -44,6 +44,9 @@ h5xxhsum = "h5xxhsum.cli:h5xxhsum"
 #
 [tool.hatch.version]
 source = "vcs"
+[tool.hatch.version.raw-options]
+version_scheme = "release-branch-semver"
+local_scheme = "node-and-date"
 
 [tool.hatch.build.hooks.vcs]
 version-file = "src/h5xxhsum/_version.py"
