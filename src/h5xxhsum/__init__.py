@@ -19,6 +19,7 @@ class Walker:
         self.hashfun = hashfun
 
         self._names = []
+        self._level1 = []
         self._digest = self.hashfun()
 
     def _iter_data(self, dset, /):
@@ -48,13 +49,14 @@ class Walker:
             )
             return
 
-        logger.debug("hashing '%s' (%s)", obj.name, obj.dtype.str)
-        self._names.append(name)
         digest = self.hashfun()
         for data in self._iter_data(obj):
             digest.update(data)
         logger.debug("%s %s", name, digest.hexdigest())
+
         self._digest.update(digest.digest())
+        self._level1.append(digest.hexdigest())
+        self._names.append(name)
 
     @property
     def hexdigest(self):
@@ -65,3 +67,7 @@ class Walker:
     def names(self):
         """Names of the visited 'Dataset's"""
         return self._names
+
+    @property
+    def level1(self):
+        return zip(self._names, self._level1, strict=True)

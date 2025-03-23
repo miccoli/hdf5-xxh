@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Detailed `jsonl` output with level1 hashes.
+
 ### Changed
 
 - *BREAKING* Compute global hash as a hash of dataset hashes, instead of running one.
