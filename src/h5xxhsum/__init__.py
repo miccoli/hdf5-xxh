@@ -27,12 +27,12 @@ class Walker:
                 yield dset[sl]
 
     def __call__(self, name, obj, /):
-        # runtime check of lexicographical iteration order
-        assert name.split("/") > (
-            self._names[-1].split("/") if self._names else []
-        ), f"Visiting in unexpected order: {name}, {self._names}"
+        """update hash"""
+
+        # hash only datasets
         if not isinstance(obj, h5py.Dataset):
             return
+
         # Some object are skipped, and do not contribute to the overall hash.
         # Currently skipped:
         # - object arrays ('O') contain pointers to python Objects: it is
