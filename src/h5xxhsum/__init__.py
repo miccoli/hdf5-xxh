@@ -16,8 +16,10 @@ logger = logging.getLogger(__name__)
 class Walker:
     def __init__(self, *, hashfun=xxhash.xxh3_128, chunked=False):
         self.chunked = chunked
+        self.hashfun = hashfun
+
         self._names = []
-        self._digest = hashfun()
+        self._digest = self.hashfun()
 
     def _iter_data(self, dset, /):
         if not self.chunked or dset.chunks is None:
@@ -48,8 +50,11 @@ class Walker:
 
         logger.debug("hashing '%s' (%s)", obj.name, obj.dtype.str)
         self._names.append(name)
+        digest = self.hashfun()
         for data in self._iter_data(obj):
-            self._digest.update(data)
+            digest.update(data)
+        logger.debug("%s %s", name, digest.hexdigest())
+        self._digest.update(digest.digest())
 
     @property
     def hexdigest(self):

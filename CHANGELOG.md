@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- *BREAKING* Compute global hash as a hash of dataset hashes, instead of running one.
+
 ## [0.1.0] - 2025-03-22
 
 First public release
