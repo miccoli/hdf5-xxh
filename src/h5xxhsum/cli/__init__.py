@@ -60,8 +60,10 @@ def h5xxhsum(h5, check, chunked, jsonl):  # noqa: C901, PLR0912
                 msg, detail = data_hash(pth, chunked)
             except FileNotFoundError:
                 click.secho(f"{pth}: not found", file=sys.stderr, fg="red")
+                continue
             except OSError as err:
                 click.secho(f"{pth}: {err}", file=sys.stderr, fg="red")
+                continue
 
             if jsonl:
                 click.echo(
