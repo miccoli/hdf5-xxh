@@ -14,9 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 class Walker:
-    def __init__(self, *, hashfun=xxhash.xxh3_128, chunked=False):
+    hashfun = xxhash.xxh3_128
+
+    def __init__(self, *, chunked=False):
         self.chunked = chunked
-        self.hashfun = hashfun
 
         self._names = []
         self._level1 = []
