@@ -1,4 +1,4 @@
-# hdf5-xxh
+# h5xxhsum
 Compute a [xxHash](https://xxhash.com) of the Datasets in an [HDF5®](https://www.hdfgroup.org/solutions/hdf5/) file.
 
 ## Motivation
